@@ -26,7 +26,7 @@
 				const x = viewport.x + (viewport.width / 2);
 				const y = viewport.y + (viewport.height / 2);
 
-				const todos = await miro.board.widgets.create({
+				return await miro.board.widgets.create({
 					text: 'TODO',
 					type: 'shape',
 					style: {
@@ -45,16 +45,17 @@
 			}
 
 			async function finishTodo(widget) {
-				console.log('clicked TODO', widget); // DELETE ME
-				const todos = await miro.board.widgets.update(w, {
-					metadata: metadata('finished'),
+				const updatedWidget = {
+					...widget,
 					style: {
 						strike: 1,
 						backgroundColor: MIRO_COLOR_LIGHT_GRAY,
 						textColor: MIRO_COLOR_LIGHT_GRAY,
 					},
-				});
-				console.log('updated TODOs', todos); // DELETE ME
+					metadata: metadata('finished'),
+				};
+
+				return await miro.board.widgets.update([updatedWidget]);
 			}
 
 			async function onCanvasClicked(e) {
