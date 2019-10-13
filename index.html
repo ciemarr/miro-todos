@@ -1,21 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 	<head>
-    <script type="text/javascript" src="https://miro.com/app/static/sdk.1.1.js"></script>
-    <script type="text/javascript">
-    miro.onReady(() => {
-      miro.initialize({
-        extensionPoints: {
-          bottomBar: {
-            title: 'Some title',
-            svgIcon: '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>',
-            onClick: () => {
-              alert('Hi!')
-            }
-          }
-        }
-      })
-    })
+    <script type='text/javascript' src='https://miro.com/app/static/sdk.1.1.js'></script>
+    <script type='text/javascript'>
+
+			const placeholderIcon = '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>';
+
+			async function createTodo() {
+				const todo = await miro.board.widgets.create({
+					'type': 'shape',
+					'style': {
+						'shapeType': 42,
+						'backgroundColor': 'yellow',
+						'backgroundOpacity': 0.4,
+						'borderColor': 'transparent',
+						'borderWidth': 0,
+						'textColor': 'black',
+					},
+					'text': 'TODO',
+					'3074457346924511910': {
+						'status': 'unstarted',
+					},
+				});
+
+				console.log('created TODO', todo);
+			}
+
+			async function getTodos() {
+				const shapes = await miro.board.widgets.get();
+				console.log('all shapes', shapes);
+			}
+
+			function finishTodos(widgets) {
+				return Promise.resolve({
+					tooltip: 'Mark completed',
+					svgIcon: placeholderIcon,
+					onClick: (widgets)  => {
+						console.log('clicked TODOs', widgets);
+					},
+				});
+			}
+
+			miro.onReady(() => {
+				miro.initialize({
+					extensionPoints: {
+						getWidgetMenuItems: finishTodos,
+						toolbar: {
+							title: 'TODO',
+							svgIcon: placeholderIcon,
+							onClick: createTodo,
+						},
+					}
+				})
+			});
+
     </script>
 	</head>
 </html>
