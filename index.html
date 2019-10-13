@@ -4,6 +4,8 @@
     <script type='text/javascript' src='https://miro.com/app/static/sdk.1.1.js'></script>
     <script type='text/javascript'>
 
+			const APP_ID = '3074457346924511910';
+
 			const placeholderIcon = '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>';
 
 			const MIRO_RECTANGLE_SHAPE_TYPE = 3;
@@ -30,18 +32,13 @@
 					'y': y,
 					'text': 'TODO',
 					'metadata': {
-						'3074457346924511910': {
+						APP_ID: {
 							'status': 'unstarted',
 						},
 					},
 				});
 
 				console.log('created TODO', todos[0]);
-			}
-
-			async function getTodos() {
-				const shapes = await miro.board.widgets.get();
-				console.log('all shapes', shapes);
 			}
 
 			function finishTodos(widgets) {
@@ -54,10 +51,22 @@
 				});
 			}
 
+			await function onCanvasClicked(e) {
+				console.log('canvas clicked', e);
+				const widgets = await miro.board.widgets.__getIntersectedObjects(e.data);
+				console.log('widgets', widgets);
+				const todos = widgets.filter(w => w.metadata[APP_ID]);
+				console.log('todos', todos);
+
+				if (todos.length > 0) {
+					finishTodos(finishTodos);
+				}
+			}
+
 			miro.onReady(() => {
+
 				miro.initialize({
 					extensionPoints: {
-						getWidgetMenuItems: finishTodos,
 						toolbar: {
 							title: 'TODO',
 							toolbarSvgIcon: placeholderIcon,
@@ -65,7 +74,10 @@
 							onClick: createTodo,
 						},
 					}
-				})
+				});
+
+				miro.addListener('CANVAS_CLICKED', onCanvasClicked);
+
 			});
 
     </script>
