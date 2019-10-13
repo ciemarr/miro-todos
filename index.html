@@ -51,7 +51,7 @@
 				});
 			}
 
-			await function onCanvasClicked(e) {
+			async function onCanvasClicked(e) {
 				console.log('canvas clicked', e);
 				const widgets = await miro.board.widgets.__getIntersectedObjects(e.data);
 				console.log('widgets', widgets);
@@ -59,7 +59,7 @@
 				console.log('todos', todos);
 
 				if (todos.length > 0) {
-					finishTodos(finishTodos);
+					return finishTodos(finishTodos);
 				}
 			}
 
