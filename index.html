@@ -11,6 +11,10 @@
 			const MIRO_BLACK_COLOR =  '#000000';
 
 			async function createTodo() {
+				const viewport = await await miro.board.viewport.getViewport();
+				const x = viewport.x + (viewport.width / 2);
+				const y = viewport.y + (viewport.height / 2);
+
 				const todos = await miro.board.widgets.create({
 					'type': 'shape',
 					'style': {
@@ -22,6 +26,8 @@
 						'textColor': MIRO_BLACK_COLOR,
 						'highlighting': '',
 					},
+					'x': x,
+					'y': y,
 					'text': 'TODO',
 					'metadata': {
 						'3074457346924511910': {
