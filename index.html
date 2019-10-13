@@ -6,24 +6,31 @@
 
 			const placeholderIcon = '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>';
 
+			const MIRO_RECTANGLE_SHAPE_TYPE = 3;
+			const MIRO_YELLOW_COLOR = '#fef445';
+			const MIRO_BLACK_COLOR =  '#000000';
+
 			async function createTodo() {
-				const todo = await miro.board.widgets.create({
+				const todos = await miro.board.widgets.create({
 					'type': 'shape',
 					'style': {
-						'shapeType': 42,
-						'backgroundColor': 'yellow',
+						'shapeType': MIRO_RECTANGLE_SHAPE_TYPE,
+						'backgroundColor': MIRO_YELLOW_COLOR,
 						'backgroundOpacity': 0.4,
 						'borderColor': 'transparent',
 						'borderWidth': 0,
-						'textColor': 'black',
+						'textColor': MIRO_BLACK_COLOR,
+						'highlighting': '',
 					},
 					'text': 'TODO',
-					'3074457346924511910': {
-						'status': 'unstarted',
+					'metadata': {
+						'3074457346924511910': {
+							'status': 'unstarted',
+						},
 					},
 				});
 
-				console.log('created TODO', todo);
+				console.log('created TODO', todos[0]);
 			}
 
 			async function getTodos() {
