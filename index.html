@@ -60,13 +60,15 @@
 
 			async function onCanvasClicked(e) {
 				const widgets = await miro.board.widgets.__getIntersectedObjects(e.data);
-				const todos = widgets.filter(w => w.metadata[APP_ID]);
-
-				if (todos.length > 1) {
-					console.warn('Overlapping TODOs not supporting; finishing first one.');
-				}
+				const todos = widgets.filter(w => {
+						return w.metadata[APP_ID] && w.metadata.status !== 'finished';
+				});
 
 				if (todos.length > 0) {
+					if (todos.length > 1) {
+						console.warn('Overlapping TODOs not supporting; finishing first one.');
+					}
+
 					finishTodo(todos[0]);
 				}
 			}
