@@ -12,13 +12,16 @@
 			const MIRO_YELLOW_COLOR = '#fef445';
 			const MIRO_BLACK_COLOR =  '#000000';
 
+			function metadata(status) {
+				const metadata = {};
+				metadata[APP_ID] = {status);
+				return metadata;
+			}
+
 			async function createTodo() {
 				const viewport = await miro.board.viewport.getViewport();
 				const x = viewport.x + (viewport.width / 2);
 				const y = viewport.y + (viewport.height / 2);
-
-				const metadata = {};
-				metadata[APP_ID] = {status: 'unstarted'};
 
 				const todos = await miro.board.widgets.create({
 					'text': 'TODO',
@@ -34,31 +37,28 @@
 					},
 					x,
 					y,
-					metadata,
+					metadata: metadata('unstarted'),
 				});
-
-				console.log('created TODO', todos[0]);
 			}
 
-			function finishTodos(widgets) {
-				return Promise.resolve({
-					tooltip: 'Mark completed',
-					svgIcon: placeholderIcon,
-					onClick: (widgets)  => {
-						console.log('clicked TODOs', widgets);
-					},
+			function finishTodo(widget) {
+				console.log('clicked TODO', widget); // DELETE ME
+				const todos = await miro.board.widgets.update(w, {
+					metadata: metadata('unstarted'),
 				});
+				console.log('updated TODOs', todos); // DELETE ME
 			}
 
 			async function onCanvasClicked(e) {
-				console.log('canvas clicked', e);
 				const widgets = await miro.board.widgets.__getIntersectedObjects(e.data);
-				console.log('widgets', widgets);
 				const todos = widgets.filter(w => w.metadata[APP_ID]);
-				console.log('todos', todos);
+
+				if (todos.length > 1) {
+					console.warn('Overlapping TODOs not supporting. Completing only one.');
+				}
 
 				if (todos.length > 0) {
-					return finishTodos(finishTodos);
+					finishTodo(todos[0]);
 				}
 			}
 
