@@ -13,11 +13,15 @@
 			const MIRO_BLACK_COLOR =  '#000000';
 
 			async function createTodo() {
-				const viewport = await await miro.board.viewport.getViewport();
+				const viewport = await miro.board.viewport.getViewport();
 				const x = viewport.x + (viewport.width / 2);
 				const y = viewport.y + (viewport.height / 2);
 
+				const metadata = {};
+				metadata[APP_ID] = {status: 'unstarted'};
+
 				const todos = await miro.board.widgets.create({
+					'text': 'TODO',
 					'type': 'shape',
 					'style': {
 						'shapeType': MIRO_RECTANGLE_SHAPE_TYPE,
@@ -28,14 +32,9 @@
 						'textColor': MIRO_BLACK_COLOR,
 						'highlighting': '',
 					},
-					'x': x,
-					'y': y,
-					'text': 'TODO',
-					'metadata': {
-						APP_ID: {
-							'status': 'unstarted',
-						},
-					},
+					x,
+					y,
+					metadata,
 				});
 
 				console.log('created TODO', todos[0]);
