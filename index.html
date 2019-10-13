@@ -46,7 +46,7 @@
 
 			async function finishTodo(widget) {
 				const updatedWidget = {
-					...widget,
+					id: widget.id,
 					style: {
 						strike: 1,
 						backgroundColor: MIRO_COLOR_LIGHT_GRAY,
