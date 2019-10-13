@@ -9,8 +9,11 @@
 			const placeholderIcon = '<circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2"/>';
 
 			const MIRO_RECTANGLE_SHAPE_TYPE = 3;
-			const MIRO_YELLOW_COLOR = '#fef445';
-			const MIRO_BLACK_COLOR =  '#000000';
+
+			const MIRO_COLOR_YELLOW     = '#fef445';
+			const MIRO_COLOR_LIGHT_GRAY = '#e6e6e6';
+			const MIRO_COLOR_DARK_GRAY  = '#808080';
+			const MIRO_COLOR_BLACK      = '#000000';
 
 			function metadata(status) {
 				const metadata = {};
@@ -24,16 +27,16 @@
 				const y = viewport.y + (viewport.height / 2);
 
 				const todos = await miro.board.widgets.create({
-					'text': 'TODO',
-					'type': 'shape',
-					'style': {
-						'shapeType': MIRO_RECTANGLE_SHAPE_TYPE,
-						'backgroundColor': MIRO_YELLOW_COLOR,
-						'backgroundOpacity': 0.4,
-						'borderColor': 'transparent',
-						'borderWidth': 0,
-						'textColor': MIRO_BLACK_COLOR,
-						'highlighting': '',
+					text: 'TODO',
+					type: 'shape',
+					style: {
+						shapeType: MIRO_RECTANGLE_SHAPE_TYPE,
+						backgroundColor: MIRO_COLOR_YELLOW,
+						backgroundOpacity: 0.4,
+						borderColor: 'transparent',
+						borderWidth: 0,
+						textColor: MIRO_COLOR_BLACK,
+						highlighting: '',
 					},
 					x,
 					y,
@@ -44,7 +47,12 @@
 			function finishTodo(widget) {
 				console.log('clicked TODO', widget); // DELETE ME
 				const todos = await miro.board.widgets.update(w, {
-					metadata: metadata('unstarted'),
+					metadata: metadata('finished'),
+					style: {
+						strike: 1,
+						backgroundColor: MIRO_COLOR_LIGHT_GRAY,
+						textColor: MIRO_COLOR_LIGHT_GRAY,
+					},
 				});
 				console.log('updated TODOs', todos); // DELETE ME
 			}
@@ -54,7 +62,7 @@
 				const todos = widgets.filter(w => w.metadata[APP_ID]);
 
 				if (todos.length > 1) {
-					console.warn('Overlapping TODOs not supporting. Completing only one.');
+					console.warn('Overlapping TODOs not supporting; finishing first one.');
 				}
 
 				if (todos.length > 0) {
