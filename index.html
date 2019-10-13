@@ -44,16 +44,30 @@
 				});
 			}
 
-			async function finishTodo(widget) {
-				const updatedWidget = {
-					id: widget.id,
-					style: {
-						strike: 1,
-						backgroundColor: MIRO_COLOR_LIGHT_GRAY,
-						textColor: MIRO_COLOR_LIGHT_GRAY,
-					},
-					metadata: metadata('finished'),
-				};
+			async function toggleTodo(widget) {
+				let updatedWidget;
+
+				if (widget.metadata[APP_ID].status === 'finished') {
+					updatedWidget = {
+						id: widget.id,
+						style: {
+							strike: 0,
+							backgroundColor: MIRO_COLOR_YELLOW
+							textColor: MIRO_COLOR_BLACK,
+						},
+						metadata: metadata('unstarted'),
+					};
+				} else {
+					updatedWidget = {
+						id: widget.id,
+						style: {
+							strike: 1,
+							backgroundColor: MIRO_COLOR_LIGHT_GRAY,
+							textColor: MIRO_COLOR_DARK_GRAY,
+						},
+						metadata: metadata('finished'),
+					};
+				}
 
 				return await miro.board.widgets.update([updatedWidget]);
 			}
@@ -69,7 +83,7 @@
 						console.warn('Overlapping TODOs not supporting; finishing first one.');
 					}
 
-					finishTodo(todos[0]);
+					toggleTodo(todos[0]);
 				}
 			}
 
